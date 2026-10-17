@@ -1,0 +1,21 @@
+# Build output
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio / Rider
+.vs/
+.idea/
+*.user
+*.suo
+*.userprefs
+*.DotSettings.user
+
+# Test results and Playwright diagnostics
+TestResults/
+artifacts/
+playwright-report/
+test-results/
+*.trx
+*.trace.zip
