@@ -11,7 +11,7 @@ public static class TestSettings
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) " +
         "Chrome/131.0.0.0 Safari/537.36";
 
-    public static string BaseUrl => (Env("BASE_URL") ?? "https://www.transfermarkt.com").TrimEnd('/');
+    public static string BaseUrl => (Env("BASE_URL") ?? "https://www.transfermarkt.com");
 
     /// <summary>A regular desktop UA: the default "HeadlessChrome" UA is commonly blocked by bot protection.</summary>
     public static string UserAgent => Env("USER_AGENT") ?? DefaultUserAgent;

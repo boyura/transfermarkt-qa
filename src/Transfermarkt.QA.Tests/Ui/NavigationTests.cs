@@ -1,0 +1,36 @@
+using Transfermarkt.QA.Tests.Core;
+using Transfermarkt.QA.Tests.Pages;
+using Transfermarkt.QA.Tests.Pages.Components;
+
+namespace Transfermarkt.QA.Tests.Ui;
+
+[TestFixture, Category("E2E")]
+public class NavigationTests : BaseUiTest
+{
+    private HomePage _home = null!;
+
+    private NavigationComponent Nav => _home.Header.Navigation;
+
+    [SetUp]
+    public void CreatePages() => _home = new HomePage(Page);
+
+    [Test(Description = "Main navigation: each section opens its page and becomes the active item; the logo returns to Discover")]
+    public async Task Main_Navigation_Flow()
+    {
+        await _home.OpenAsync();
+        await Expect(Nav.ActiveItem).ToHaveTextAsync(NavigationComponent.Label(NavSection.Discover));
+
+        foreach (var section in Enum.GetValues<NavSection>().Where(s => s != NavSection.Discover))
+        {
+            await Nav.ClickAsync(section);
+
+            await Expect(Page).ToHaveURLAsync(NavigationComponent.UrlPattern(section));
+            await Expect(Nav.ActiveItem).ToHaveTextAsync(NavigationComponent.Label(section));
+        }
+
+        await _home.Header.Logo.ClickAsync();
+
+        await Expect(Page).ToHaveURLAsync(NavigationComponent.UrlPattern(NavSection.Discover));
+        await Expect(Nav.ActiveItem).ToHaveTextAsync(NavigationComponent.Label(NavSection.Discover));
+    }
+}
