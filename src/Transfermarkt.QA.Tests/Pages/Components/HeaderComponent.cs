@@ -5,7 +5,7 @@ public sealed class HeaderComponent(IPage page)
 {
     public ILocator Logo => page.Locator("a.tm-header__logo").First;
 
-    public ILocator SearchInput => page.Locator("input[name='query']").First;
+    public SearchComponent Search => new(page);
 
     /// <summary>Verified on the live site: main nav is <c>nav.main-navbar</c> with links such as /navigation/marktwerte.</summary>
     public ILocator NavLink(string href) =>
@@ -16,10 +16,4 @@ public sealed class HeaderComponent(IPage page)
 
     public ILocator LogoutLink =>
         page.GetByRole(AriaRole.Link, new() { NameRegex = new Regex(@"log ?out|sign out", RegexOptions.IgnoreCase) });
-
-    public async Task SearchAsync(string query)
-    {
-        await SearchInput.FillAsync(query);
-        await SearchInput.PressAsync("Enter");
-    }
 }
