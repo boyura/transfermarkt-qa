@@ -18,6 +18,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Transfermarkt.QA.Framework\Transfermarkt.QA.Framework.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Using Include="NUnit.Framework" />
     <Using Include="Microsoft.Playwright" />
     <Using Include="Microsoft.Playwright.NUnit" />

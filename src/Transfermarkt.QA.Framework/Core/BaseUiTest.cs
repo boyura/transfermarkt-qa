@@ -39,19 +39,34 @@ public abstract class BaseUiTest : PageTest
         await new ConsentDialog(Page).RegisterAutoDismissAsync();
     }
 
+    /// <summary>
+    /// Every test fails if any HTTP 500 was seen, first-party or third-party. Override to false
+    /// only for tests that inject a 500 on purpose.
+    /// </summary>
+    protected virtual bool FailOn500 => true;
+
     [TearDown]
     public async Task UiTearDown()
     {
         Http.Dispose();
         TestContext.Out.WriteLine(Http.Log.Describe());
 
-        var failed = TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Failed;
+        var http500s = FailOn500 ? Http.Log.Failures : [];
+        var failed = TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Failed || http500s.Count > 0;
         if (!failed)
         {
             await Context.Tracing.StopAsync(); // discard: keeps green runs fast and small
             return;
         }
 
+        await SaveDiagnosticsAsync();
+
+        // Asserted last so the screenshot/trace are captured even when this is the only failure.
+        Assert.That(http500s, Is.Empty, "HTTP 500 responses were observed during the test");
+    }
+
+    private async Task SaveDiagnosticsAsync()
+    {
         Directory.CreateDirectory(TestSettings.ArtifactsDir);
         var name = SafeFileName(TestContext.CurrentContext.Test.Name);
 
