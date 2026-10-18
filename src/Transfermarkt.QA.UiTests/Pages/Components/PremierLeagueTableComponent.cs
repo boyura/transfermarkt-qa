@@ -3,10 +3,8 @@ using Transfermarkt.QA.Framework.Config;
 namespace Transfermarkt.QA.UiTests.Pages.Components;
 
 /// <summary>
-/// The Premier League "Table" standings widget (competition-id 112) on the home page.
-/// Verified on the live site: it is the lazy <c>&lt;tm-competition-tables&gt;</c> Svelte component, NOT a &lt;table&gt;:
-/// a header &lt;section&gt; and one <c>section[data-key]</c> per club, each holding div cells:
-/// position, trend icon, club (logo + name), Matches, GD, Pts. Playwright CSS pierces its open shadow root.
+/// Premier League standings widget on the home page: a lazy <c>&lt;tm-competition-tables&gt;</c> Svelte component, not a
+/// &lt;table&gt;. One <c>section[data-key]</c> per club; Playwright CSS pierces its open shadow root.
 /// </summary>
 public sealed class PremierLeagueTableComponent(IPage page)
 {
@@ -44,7 +42,7 @@ public sealed class PremierLeagueTableComponent(IPage page)
             }
             catch (TimeoutException) when (DateTime.UtcNow < deadline)
             {
-                // not loaded yet: the layout probably moved, scroll again
+                // not rendered yet: the layout probably moved, scroll again
             }
         }
     }

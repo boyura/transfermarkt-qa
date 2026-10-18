@@ -4,9 +4,8 @@ using Transfermarkt.QA.Framework.Core;
 namespace Transfermarkt.QA.Framework.Tests.Integration;
 
 /// <summary>
-/// Integration level (browser + network layer): proves the HTTP error monitor behind UI test #5 actually
-/// detects failures, so that test cannot pass vacuously. The 500 is injected with network interception,
-/// hence this test is fully deterministic and never depends on the live site.
+/// Proves the HTTP 500 monitor used by the E2E tests really detects failures, so they cannot pass vacuously.
+/// The 500 is injected via interception: deterministic and independent of the live site.
 /// </summary>
 [TestFixture, Category("Integration")]
 public class NetworkInterceptionTests : BaseUiTest

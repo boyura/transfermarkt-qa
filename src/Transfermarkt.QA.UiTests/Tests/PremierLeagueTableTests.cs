@@ -13,11 +13,9 @@ public class PremierLeagueTableTests : TransfermarktUiTest
 
     private HomePage _home = null!;
 
-    // Page is created per test by PageTest, so the page object is built once per test here, not inside each test
     [SetUp]
     public void CreatePages() => _home = new HomePage(Page);
 
-    /// <summary>Opens the home page and brings the lazily rendered table widget into view.</summary>
     private async Task<PremierLeagueTableComponent> OpenTableAsync()
     {
         await _home.OpenAsync();
@@ -38,7 +36,6 @@ public class PremierLeagueTableTests : TransfermarktUiTest
         // Headers (the 2nd column, the trend icon, has no title)
         await Expect(table.Headers).ToHaveTextAsync(["#", "", "club", "Matches", "GD", "Pts"]);
 
-        // Exactly 10 club rows and 10 logos
         await Expect(table.Rows).ToHaveCountAsync(ExpectedRows);
         await Expect(table.ClubLogos).ToHaveCountAsync(ExpectedRows);
 

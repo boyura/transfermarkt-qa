@@ -3,9 +3,8 @@ using System.Text.Json;
 namespace Transfermarkt.QA.Framework.Config;
 
 /// <summary>
-/// Single source of truth for run configuration, read from appsettings.json. When the environment
-/// variable Environment=&lt;name&gt; is set (e.g. stage), keys in appsettings.&lt;name&gt;.json override the base file.
-/// Playwright's own switches (HEADED=1, BROWSER=..., PWDEBUG=1) are separate and still use env vars.
+/// Run configuration from appsettings.json; with Environment=&lt;name&gt; set, appsettings.&lt;name&gt;.json overrides it.
+/// Playwright's own switches (HEADED, BROWSER, PWDEBUG) stay environment variables.
 /// </summary>
 public static class TestSettings
 {
@@ -26,7 +25,6 @@ public static class TestSettings
     public static float ActionTimeoutMs => Values["ActionTimeoutMs"].GetSingle();
     public static float NavigationTimeoutMs => Values["NavigationTimeoutMs"].GetSingle();
 
-    /// <summary>Where failure screenshots and traces are written: an "artifacts" folder next to the test binaries.</summary>
     public static string ArtifactsDir => Path.Combine(TestContext.CurrentContext.WorkDirectory, "artifacts");
 
     private static Dictionary<string, JsonElement> Load()

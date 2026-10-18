@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Applied to every run of this project via RunSettingsFilePath in the .csproj. -->
+<RunSettings>
+  <NUnit>
+    <!-- Assert.Warn (known site bug) would otherwise show as Skipped, which reads as "not run". -->
+    <MapWarningTo>Passed</MapWarningTo>
+  </NUnit>
+</RunSettings>

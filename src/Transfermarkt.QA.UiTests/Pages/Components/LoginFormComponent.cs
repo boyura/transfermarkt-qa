@@ -1,6 +1,5 @@
 namespace Transfermarkt.QA.UiTests.Pages.Components;
 
-/// <summary>Login form shown by the header "Log in" button (rendered in the tm-userbox web component).</summary>
 public sealed class LoginFormComponent(IPage page)
 {
     public ILocator Form => page.Locator("form.login-form");
@@ -24,10 +23,8 @@ public sealed class LoginFormComponent(IPage page)
 
     public ILocator ForgotDetailsLink => Form.Locator(".button-group a");
 
-    /// <summary>Server error shown after submitting credentials of a non-existing user.</summary>
     public ILocator LoginError => Form.Locator(".form-group .error-list");
 
-    /// <summary>"×" button that closes the form.</summary>
     public ILocator CloseButton => page.Locator("tm-userbox button.cancel-button");
 
     public async Task FillAsync(string username, string password)

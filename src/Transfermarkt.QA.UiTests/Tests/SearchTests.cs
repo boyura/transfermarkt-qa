@@ -28,7 +28,6 @@ public class SearchTests : TransfermarktUiTest
 
         var clubs = new SearchResultsPage(Page).Clubs;
 
-        // The search box keeps the searched term
         await Expect(_home.Header.Search.Input).ToHaveValueAsync(TermRegex);
 
         // Clubs heading reports hits: "Search results: Clubs - N Hits", N > 0

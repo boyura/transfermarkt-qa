@@ -2,7 +2,6 @@ using Transfermarkt.QA.Framework.Config;
 
 namespace Transfermarkt.QA.UiTests.Pages.Components;
 
-/// <summary>Top-level sections of the main navigation bar.</summary>
 public enum NavSection
 {
     Discover,
@@ -14,7 +13,6 @@ public enum NavSection
     Gaming
 }
 
-/// <summary>Main navigation bar: sections are clicked by their visible label, like a user would.</summary>
 public sealed class NavigationComponent(IPage page)
 {
     private static readonly Dictionary<NavSection, (string Label, string Path)> Sections = new()
@@ -33,7 +31,9 @@ public sealed class NavigationComponent(IPage page)
     public ILocator Item(NavSection section) =>
         Bar.GetByRole(AriaRole.Link, new() { Name = Sections[section].Label, Exact = true });
 
-    /// <summary>Matches a class attribute containing the <c>active</c> class the site puts on the selected section.</summary>
+    public ILocator ActiveItems => Bar.Locator("a.active");
+
+    /// <summary>The whole <c>active</c> class among others, not a substring like "inactive".</summary>
     public static readonly Regex ActiveClass = new(@"(^|\s)active(\s|$)");
 
     public Task ClickAsync(NavSection section) => Item(section).ClickAsync();

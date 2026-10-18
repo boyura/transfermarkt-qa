@@ -2,6 +2,9 @@
 <!-- Run headed from CLI: dotnet test with the settings option pointing at this file.
      In Visual Studio: Test > Configure Run Settings > Select Solution Wide runsettings File. -->
 <RunSettings>
+  <NUnit>
+    <MapWarningTo>Passed</MapWarningTo>
+  </NUnit>
   <Playwright>
     <BrowserName>chromium</BrowserName>
     <LaunchOptions>

@@ -6,10 +6,8 @@ namespace Transfermarkt.QA.Framework.Helpers;
 public sealed record HttpFailure(string Method, string Url, int Status);
 
 /// <summary>
-/// Pure, thread-safe collector of HTTP 500 responses. When a host list is given, only responses
-/// from exactly those hosts are recorded (compared as-is, no www stripping or subdomain matching),
-/// so third-party ads and trackers cannot fail a test. Browser wiring lives in
-/// <see cref="Core.HttpErrorMonitor"/>, which keeps this class trivially unit-testable.
+/// Thread-safe collector of HTTP 500 responses. With a host list, only exactly those hosts count (no www stripping or
+/// subdomain matching), so third-party ads and trackers cannot fail a test. Kept free of browser code to stay unit-testable.
 /// </summary>
 public sealed class HttpErrorLog
 {

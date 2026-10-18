@@ -4,15 +4,25 @@ using Transfermarkt.QA.Framework.Config;
 namespace Transfermarkt.QA.Framework.Core;
 
 /// <summary>
-/// Base for browser tests. Playwright's PageTest already gives every test a fresh,
-/// isolated BrowserContext + Page (no shared state between tests). On top of that this adds:
-/// consistent context options, timeouts, an HTTP error monitor, and failure diagnostics (screenshot + trace) attached to the NUnit result.
+/// Base for browser tests. On top of PageTest's isolated context per test it adds fixed context options, timeouts,
+/// HTTP 500 monitoring, and a screenshot + trace attached to the result on failure.
 /// </summary>
 public abstract class BaseUiTest : PageTest
 {
     protected HttpErrorMonitor Http { get; private set; } = null!;
 
-    public override BrowserNewContextOptions ContextOptions() => new()
+    /// <summary>Storage state JSON (cookies + local storage) every test context starts from; null for a clean context.</summary>
+    protected virtual string? StorageState => null;
+
+    public override BrowserNewContextOptions ContextOptions()
+    {
+        var options = DefaultContextOptions();
+        options.StorageState = StorageState;
+        return options;
+    }
+
+    /// <summary>Static so a one-time setup outside a test creates its context the same way.</summary>
+    public static BrowserNewContextOptions DefaultContextOptions() => new()
     {
         BaseURL = TestSettings.BaseUrl,
         Locale = "en-GB",
@@ -33,10 +43,7 @@ public abstract class BaseUiTest : PageTest
         await Context.Tracing.StartAsync(new() { Screenshots = true, Snapshots = true, Sources = false });
     }
 
-    /// <summary>
-    /// Every test fails if any HTTP 500 came from a host in MonitoredHosts (third-party ads/trackers are ignored). Override to false
-    /// only for tests that inject a 500 on purpose.
-    /// </summary>
+    /// <summary>Fail on HTTP 500s from MonitoredHosts. Override to false only in tests that inject a 500 on purpose.</summary>
     protected virtual bool FailOn500 => true;
 
     [TearDown]

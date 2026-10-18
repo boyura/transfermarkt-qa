@@ -1,5 +1,3 @@
-// Fixtures run in parallel (each test still gets its own isolated BrowserContext).
-// Kept at 2 workers on purpose: the target site is bot-protected and aggressive
-// parallelism from one IP increases the chance of throttling / challenges.
+// Only 2 workers on purpose: the site is bot-protected, and more parallel traffic from one IP risks throttling.
 [assembly: Parallelizable(ParallelScope.Fixtures)]
 [assembly: LevelOfParallelism(2)]

@@ -19,3 +19,10 @@ playwright-report/
 test-results/
 *.trx
 *.trace.zip
+
+# Committed proof of a test run (see README, "Proof of a test run")
+!docs/test-run/
+!docs/test-run/**
+
+# Local copies of traces/screenshots for manual inspection
+traces/

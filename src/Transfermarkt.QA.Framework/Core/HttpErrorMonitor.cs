@@ -3,10 +3,7 @@ using Transfermarkt.QA.Framework.Helpers;
 
 namespace Transfermarkt.QA.Framework.Core;
 
-/// <summary>
-/// Subscribes to every response in a BrowserContext (incl. popups and iframes) and feeds
-/// the pure <see cref="HttpErrorLog"/>. Event-driven: no polling or sleeps.
-/// </summary>
+/// <summary>Feeds every response in a BrowserContext (incl. popups and iframes) to <see cref="HttpErrorLog"/>.</summary>
 public sealed class HttpErrorMonitor : IDisposable
 {
     private readonly IBrowserContext _context;

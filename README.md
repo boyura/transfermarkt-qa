@@ -1,88 +1,93 @@
 # Transfermarkt QA
 
-UI test automation for transfermarkt.com (.NET 8, NUnit, Playwright).
-
-## Solution structure
+UI test automation for [transfermarkt.com](https://www.transfermarkt.com) with .NET 8, NUnit and Playwright.
+Design details and technology rationale: [`docs/DESIGN.md`](docs/DESIGN.md).
 
 | Project | Purpose |
 |---|---|
-| `Transfermarkt.QA.Framework` | Reusable test infrastructure: settings, `BaseUiTest`, `HttpErrorMonitor`, `HttpErrorLog` |
-| `Transfermarkt.QA.Framework.Tests` | Tests of the framework itself (`Unit` and `Integration` folders) |
-| `Transfermarkt.QA.UiTests` | End-to-end UI tests of the site (page objects, API mocks, tests) |
+| `Transfermarkt.QA.Framework` | Reusable infrastructure: settings, base test, HTTP 500 monitoring, failure diagnostics |
+| `Transfermarkt.QA.Framework.Tests` | Unit and integration tests of the framework |
+| `Transfermarkt.QA.UiTests` | E2E tests of the site: page objects, API mocks, tests |
 
-Tests are tagged with NUnit categories: `Unit`, `Integration`, `E2E`.
+## How to run locally
 
-```bash
-dotnet test --filter "Category=Unit"
-dotnet test --filter "Category=Integration"
-dotnet test --filter "Category=E2E"
-```
-
-## Unit vs integration testing in this solution
-
-**Unit tests** (`Framework.Tests/Unit`, category `Unit`) exercise a single class in isolation, in memory:
-no browser, no network, no timing. They are fast and fully deterministic.
-`HttpErrorLogTests` covers `HttpErrorLog`, a deliberately pure class that decides which responses count as failures.
-
-**Integration tests** (`Framework.Tests/Integration`, category `Integration`) check that several real components
-work together: here the Playwright browser, the network layer and `HttpErrorMonitor` feeding `HttpErrorLog`.
-`NetworkInterceptionTests` runs a real browser and injects a `500` via Playwright route interception, then asserts
-the monitor records it. It is slower than a unit test, but still never touches the live site.
-
-**E2E tests** (`UiTests`, category `E2E`) are the product-level UI tests against transfermarkt.com. They are not
-unit or integration tests of our code; they are the thing the framework exists to support.
-
-## Why these examples were chosen
-
-- **The tests target the framework's own logic, not the site.** The riskiest piece of custom code is the HTTP 500
-  detection used by the UI tests. If it silently failed, those tests would pass vacuously, so it is the part most
-  worth proving.
-- **`HttpErrorLog` is the unit example** because its rules are pure logic with many edge cases that are cheap to
-  check without a browser: exact host matching (no subdomain or bare-domain false positives, case-insensitive),
-  capturing only `500` (not `404`, `501`, `503`), behaviour with and without a host filter, and the failure report text.
-- **`HttpErrorMonitor` wired to a browser is the integration example** because unit tests cannot show that the
-  Playwright `Response` event is actually subscribed and reaches the log. Interception makes the failure
-  deterministic, so the test does not depend on the live site misbehaving. It polls with a delayed NUnit constraint
-  instead of a fixed sleep.
-- **The split keeps the pyramid healthy:** many cheap unit tests for the logic, one targeted integration test for
-  the wiring, and a small number of E2E tests for user-visible behaviour.
-
-## How to run the tests and reproduce the results
-
-Prerequisites: [.NET 8 SDK](https://dotnet.microsoft.com/download) or newer, and PowerShell (for the Playwright browser install).
+Prerequisites: [.NET 8 SDK](https://dotnet.microsoft.com/download) or newer, PowerShell and internet access. One-time setup:
 
 ```bash
 dotnet build
 pwsh src/Transfermarkt.QA.UiTests/bin/Debug/net8.0/playwright.ps1 install chromium
 ```
 
-Run everything and write a console log plus a TRX report:
+Tests run **headless by default**:
 
 ```bash
-dotnet test --logger "trx;LogFileName=test-results.trx" --logger "console;verbosity=normal" --results-directory test-results
+dotnet test                                    # all tests, headless
+dotnet test --filter "Category=E2E"            # one level: Unit, Integration or E2E
 ```
 
-Or run one layer: `dotnet test --filter "Category=Unit"` (also `Integration`, `E2E`).
-Useful switches: `HEADED=1` shows the browser, `BROWSER=firefox` changes the browser, `Environment=stage` loads `appsettings.stage.json`.
-Failure screenshots and traces go to an `artifacts` folder next to the test binaries.
+To watch the browser, run headed with `HEADED=1 dotnet test`, or slowed down with
+`dotnet test --settings src/Transfermarkt.QA.UiTests/headed.runsettings`.
+Other switches: `BROWSER=firefox|webkit` (install that browser first) and `Environment=stage` (loads `appsettings.stage.json`).
 
-## Proof of a test run
+To get the reports in [`docs/test-run`](docs/test-run) (HTML report per project plus console log):
 
-The output of a real run (18 Oct 2026, Windows 11, .NET SDK 10.0.402, targeting net8.0, Chromium) is committed in [`docs/test-run`](docs/test-run):
+```bash
+mkdir -p test-results
+dotnet test --logger "html;LogFilePrefix=test-results" --logger "console;verbosity=normal" --results-directory test-results | tee test-results/console-output.txt
+```
 
-- [`console-output.txt`](docs/test-run/console-output.txt): full console output, including stack traces and Playwright call logs.
-- [`test-results.trx`](docs/test-run/test-results.trx): machine-readable report (opens in Visual Studio or any TRX viewer).
+On a failure, a screenshot and a Playwright trace are saved in `src/Transfermarkt.QA.UiTests/bin/Debug/net8.0/artifacts`.
+Open the trace with `pwsh src/Transfermarkt.QA.UiTests/bin/Debug/net8.0/playwright.ps1 show-trace <file>.trace.zip`.
 
-| Suite | Result |
-|---|---|
-| `Framework.Tests` (Unit + Integration) | 8 of 8 passed |
-| `UiTests` (E2E, live site) | 5 of 5 passed |
+## Test approach and test levels
 
-The unit and integration tests are deterministic. The E2E tests run against the live site, so they can be affected by it.
+Behaviour-focused, risk-based UI testing through a real browser.
+- Each E2E test covers one user-visible feature: main navigation, header search, login form, and the Premier League table.
+- Assertions check rules that hold on any day (correct URL, highlighted section, every result contains the search term, 10 rows with numeric columns), not values that change with live data.
+- When a check depends on backend data, the API response is intercepted and controlled.
+- Every E2E test also fails if `www.transfermarkt.com` returns an HTTP 500 during the test.
 
-Known live-site behaviour: during development, `Main_Navigation_Flow` failed intermittently because the site sometimes served a page
-with no highlighted (`active`) item in the main menu. The cause was not identified (blocking third-party requests and `SlowMo` made no
-measurable difference) and the problem stopped reproducing. The test keeps a strict assertion that the clicked section's menu item has the
-`active` class, so if the site misbehaves again this test will fail rather than hide it.
-Two real defects were fixed: `BaseUrl` now points at `https://www.transfermarkt.com` (the host the site redirects to), and the monitored host
-for HTTP 500 errors was changed to match.
+| Level | Category | What it tests | Runs against |
+|---|---|---|---|
+| Unit | `Unit` | Framework logic in isolation (`HttpErrorLog`: which responses count as failures) | Memory only |
+| Integration | `Integration` | Framework wired to a real browser (`HttpErrorMonitor` sees an injected 500) | Real Chromium, intercepted network |
+| E2E | `E2E` | User-visible behaviour of the site | Live production site |
+
+The framework is tested on its own because a silent bug in the HTTP 500 detection would make every E2E test pass vacuously.
+
+## Assumptions and limitations
+
+**Assumptions**
+- The target is production `https://www.transfermarkt.com`, in English, desktop layout (1440x900, `en-GB`). There is no test environment.
+- The tests never change data. The only things submitted are a search and a login attempt with a made-up user.
+- Reference data is stable: "Manchester City" exists, and the Premier League table (competition 112) is on the home page.
+- Chromium is the default browser; Firefox and WebKit were not part of the recorded run.
+
+**Limitations and workarounds**
+- **Known site bug: no highlighted menu item.** A freshly rendered section page is sometimes served with no `active`
+  class on any menu item. The server's HTML already lacks it, so it is not a test timing issue: plain `curl` requests
+  without a browser reproduce it. The test fails if a *different* item is highlighted, and records an NUnit warning
+  (`Known site bug: ...`) if *none* is. `default.runsettings` reports warnings as Passed, because NUnit's default
+  (Skipped) would read as "not run".
+  To reproduce manually: open `https://www.transfermarkt.com/navigation/statistiken?utm_source=<new value>`, move the
+  mouse off the menu (`:hover` looks the same as `active`), and run
+  `document.querySelectorAll('nav.main-navbar a.active').length` in DevTools. `0` means the bug.
+- **Cookie consent banner.** It appears a few seconds after load and can swallow a click. A one-time setup accepts it
+  once per run and saves the cookies, and every test starts with consent already given, so the banner never shows.
+- **Lazy Premier League table.** It loads its data only when scrolled into view, and ads shift the layout after load.
+  The page object scrolls again until the first row appears, within a time limit.
+- **Live data** changes daily, so tests assert structure and rules. The trend-icon test sets the trends it needs by
+  intercepting the API.
+- **Slow uncached pages and bot protection.** Timeouts are in `appsettings.json`. Parallelism is capped at 2 fixtures and
+  a regular desktop user agent is used, because the site is bot-protected.
+- **No static waits.** There is no `Sleep`, `Delay`, `WaitForTimeout` or `NetworkIdle`; every wait is for a concrete condition.
+- **Not covered:** a successful login, which needs real credentials.
+
+## Test execution evidence
+
+[`docs/test-run`](docs/test-run) holds a recorded run (18 Oct 2026, Windows 11, .NET SDK 10.0.402, net8.0, Chromium, headless):
+[`ui-tests.html`](docs/test-run/ui-tests.html) (E2E: 5 of 5 passed),
+[`framework-tests.html`](docs/test-run/framework-tests.html) (unit and integration: 8 of 8 passed), and the full
+[`console-output.txt`](docs/test-run/console-output.txt).
+Before it, the suite was run repeatedly to find and fix flaky tests from their traces. With the final code, 5 runs in a
+row and the recorded run were all green.
