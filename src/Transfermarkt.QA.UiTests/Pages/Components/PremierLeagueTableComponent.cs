@@ -1,3 +1,5 @@
+using Transfermarkt.QA.Framework.Config;
+
 namespace Transfermarkt.QA.UiTests.Pages.Components;
 
 /// <summary>
@@ -25,6 +27,25 @@ public sealed class PremierLeagueTableComponent(IPage page)
         Has = page.Locator(".club .name", new() { HasTextRegex = new Regex($"^{Regex.Escape(club)}$") })
     }));
 
-    /// <summary>The widget renders lazily: bring it into view; tests then rely on web-first waiting.</summary>
-    public async Task ScrollIntoViewAsync() => await Root.ScrollIntoViewIfNeededAsync();
+    /// <summary>
+    /// The widget requests its data only once it enters the viewport. Right after load the consent overlay closes and ads
+    /// render, shifting the layout, so a single scroll can miss and the rows never load: re-scroll until the first row shows.
+    /// </summary>
+    public async Task ScrollIntoViewAsync()
+    {
+        var deadline = DateTime.UtcNow.AddMilliseconds(TestSettings.ExpectTimeoutMs);
+        while (true)
+        {
+            await Root.ScrollIntoViewIfNeededAsync();
+            try
+            {
+                await Rows.First.WaitForAsync(new() { Timeout = 2000 });
+                return;
+            }
+            catch (TimeoutException) when (DateTime.UtcNow < deadline)
+            {
+                // not loaded yet: the layout probably moved, scroll again
+            }
+        }
+    }
 }

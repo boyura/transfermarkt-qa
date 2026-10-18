@@ -19,19 +19,19 @@ public class NavigationTests : TransfermarktUiTest
     public async Task Main_Navigation_Flow()
     {
         await _home.OpenAsync();
-        await Expect(Nav.ActiveItem).ToHaveTextAsync(NavigationComponent.Label(NavSection.Discover));
+        await Expect(Nav.Item(NavSection.Discover)).ToHaveClassAsync(NavigationComponent.ActiveClass);
 
         foreach (var section in Enum.GetValues<NavSection>().Where(s => s != NavSection.Discover))
         {
             await Nav.ClickAsync(section);
 
             await Expect(Page).ToHaveURLAsync(NavigationComponent.UrlPattern(section));
-            await Expect(Nav.ActiveItem).ToHaveTextAsync(NavigationComponent.Label(section));
+            await Expect(Nav.Item(section)).ToHaveClassAsync(NavigationComponent.ActiveClass);
         }
 
         await _home.Header.Logo.ClickAsync();
 
         await Expect(Page).ToHaveURLAsync(NavigationComponent.UrlPattern(NavSection.Discover));
-        await Expect(Nav.ActiveItem).ToHaveTextAsync(NavigationComponent.Label(NavSection.Discover));
+        await Expect(Nav.Item(NavSection.Discover)).ToHaveClassAsync(NavigationComponent.ActiveClass);
     }
 }

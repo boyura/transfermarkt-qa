@@ -9,11 +9,8 @@ public sealed class ConsentDialog(IPage page)
 
     private ILocator Overlay => page.Locator(FrameSelector);
 
-    private ILocator AcceptButton => page.FrameLocator(FrameSelector).First
-        .GetByRole(AriaRole.Button, new()
-        {
-            NameRegex = new Regex("accept( &| and)? continue|accept all|agree", RegexOptions.IgnoreCase)
-        });
+    // "Accept & continue" button inside the consent notice (the button itself has no id)
+    private ILocator AcceptButton => page.FrameLocator(FrameSelector).First.Locator("#notice .accept-all");
 
     public Task RegisterAutoDismissAsync() =>
         page.AddLocatorHandlerAsync(Overlay, async () => await AcceptButton.First.ClickAsync());

@@ -33,13 +33,10 @@ public sealed class NavigationComponent(IPage page)
     public ILocator Item(NavSection section) =>
         Bar.GetByRole(AriaRole.Link, new() { Name = Sections[section].Label, Exact = true });
 
-    /// <summary>The highlighted entry (the site marks it with the <c>active</c> class); exactly one is expected.</summary>
-    public ILocator ActiveItem => Bar.Locator("a.active");
+    /// <summary>Matches a class attribute containing the <c>active</c> class the site puts on the selected section.</summary>
+    public static readonly Regex ActiveClass = new(@"(^|\s)active(\s|$)");
 
     public Task ClickAsync(NavSection section) => Item(section).ClickAsync();
-
-    /// <summary>Visible label of the section, for asserting which item is active.</summary>
-    public static string Label(NavSection section) => Sections[section].Label;
 
     /// <summary>URL that ends with exactly the section path (e.g. "/navigation/gaming"), nothing after it. Discover is the bare host plus "/".</summary>
     public static Regex UrlPattern(NavSection section) =>
