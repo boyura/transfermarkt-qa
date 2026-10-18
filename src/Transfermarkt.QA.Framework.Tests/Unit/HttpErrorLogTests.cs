@@ -1,6 +1,6 @@
-using Transfermarkt.QA.Tests.Helpers;
+using Transfermarkt.QA.Framework.Helpers;
 
-namespace Transfermarkt.QA.Tests.Unit;
+namespace Transfermarkt.QA.Framework.Tests.Unit;
 
 [TestFixture, Category("Unit")]
 public class HttpErrorLogTests

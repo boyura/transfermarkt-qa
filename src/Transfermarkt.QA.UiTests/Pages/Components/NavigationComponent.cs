@@ -1,6 +1,6 @@
-using Transfermarkt.QA.Tests.Config;
+using Transfermarkt.QA.Framework.Config;
 
-namespace Transfermarkt.QA.Tests.Pages.Components;
+namespace Transfermarkt.QA.UiTests.Pages.Components;
 
 /// <summary>Top-level sections of the main navigation bar.</summary>
 public enum NavSection

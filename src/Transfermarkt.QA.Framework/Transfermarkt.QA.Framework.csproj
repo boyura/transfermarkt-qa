@@ -4,16 +4,12 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>Transfermarkt.QA.Tests</RootNamespace>
+    <RootNamespace>Transfermarkt.QA.Framework</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="NUnit" Version="4.2.2" />
     <PackageReference Include="Microsoft.Playwright.NUnit" Version="1.49.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="appsettings*.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>

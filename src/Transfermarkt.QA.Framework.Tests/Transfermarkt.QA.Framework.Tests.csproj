@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
-    <RootNamespace>Transfermarkt.QA.Tests</RootNamespace>
+    <RootNamespace>Transfermarkt.QA.Framework.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,6 +19,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Transfermarkt.QA.Framework\Transfermarkt.QA.Framework.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings*.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>

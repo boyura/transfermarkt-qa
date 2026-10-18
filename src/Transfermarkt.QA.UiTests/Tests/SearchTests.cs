@@ -1,10 +1,11 @@
-using Transfermarkt.QA.Tests.Core;
-using Transfermarkt.QA.Tests.Pages;
+using Transfermarkt.QA.UiTests.Core;
+using Transfermarkt.QA.Framework.Core;
+using Transfermarkt.QA.UiTests.Pages;
 
-namespace Transfermarkt.QA.Tests.Ui;
+namespace Transfermarkt.QA.UiTests.Tests;
 
 [TestFixture, Category("E2E")]
-public class SearchTests : BaseUiTest
+public class SearchTests : TransfermarktUiTest
 {
     private const string SearchTerm = "manchester city";
 

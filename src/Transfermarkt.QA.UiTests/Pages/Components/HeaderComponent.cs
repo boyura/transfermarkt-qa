@@ -1,4 +1,4 @@
-namespace Transfermarkt.QA.Tests.Pages.Components;
+namespace Transfermarkt.QA.UiTests.Pages.Components;
 
 /// <summary>Global site header: logo, main navigation, search, login entry point.</summary>
 public sealed class HeaderComponent(IPage page)

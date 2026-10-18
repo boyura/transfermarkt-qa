@@ -1,7 +1,7 @@
 using System.Collections.Concurrent;
 using System.Text;
 
-namespace Transfermarkt.QA.Tests.Helpers;
+namespace Transfermarkt.QA.Framework.Helpers;
 
 public sealed record HttpFailure(string Method, string Url, int Status);
 

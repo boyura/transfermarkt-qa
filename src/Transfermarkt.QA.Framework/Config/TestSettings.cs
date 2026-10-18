@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace Transfermarkt.QA.Tests.Config;
+namespace Transfermarkt.QA.Framework.Config;
 
 /// <summary>
 /// Single source of truth for run configuration, read from appsettings.json. When the environment

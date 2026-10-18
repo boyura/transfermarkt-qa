@@ -1,4 +1,4 @@
-namespace Transfermarkt.QA.Tests.Pages.Components;
+namespace Transfermarkt.QA.UiTests.Pages.Components;
 
 /// <summary>
 /// Cookie consent (Sourcepoint CMP) renders inside an iframe overlay that intercepts clicks.

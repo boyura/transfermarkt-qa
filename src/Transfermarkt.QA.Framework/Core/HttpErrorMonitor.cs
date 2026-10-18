@@ -1,6 +1,6 @@
-using Transfermarkt.QA.Tests.Helpers;
+using Transfermarkt.QA.Framework.Helpers;
 
-namespace Transfermarkt.QA.Tests.Core;
+namespace Transfermarkt.QA.Framework.Core;
 
 /// <summary>
 /// Subscribes to every response in a BrowserContext (incl. popups and iframes) and feeds

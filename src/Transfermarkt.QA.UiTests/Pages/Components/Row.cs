@@ -1,4 +1,4 @@
-namespace Transfermarkt.QA.Tests.Pages.Components;
+namespace Transfermarkt.QA.UiTests.Pages.Components;
 
 /// <summary>One club row of the standings widget. Cell order (verified): position, trend icon, club, Matches, GD, Pts.</summary>
 public sealed class Row(ILocator row)

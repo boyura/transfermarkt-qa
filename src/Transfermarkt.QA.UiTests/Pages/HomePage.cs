@@ -1,6 +1,6 @@
-using Transfermarkt.QA.Tests.Pages.Components;
+using Transfermarkt.QA.UiTests.Pages.Components;
 
-namespace Transfermarkt.QA.Tests.Pages;
+namespace Transfermarkt.QA.UiTests.Pages;
 
 /// <summary>
 /// Home page. Exposes locators and components (no assertions here): tests own the <c>Expect</c> checks.

@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{51E38DA2-439C-48B2-856B-6D3B5C5556FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Transfermarkt.QA.Tests", "src\Transfermarkt.QA.Tests\Transfermarkt.QA.Tests.csproj", "{51F9B8F5-66EA-491C-BC54-6C2B794B904D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Transfermarkt.QA.UiTests", "src\Transfermarkt.QA.UiTests\Transfermarkt.QA.UiTests.csproj", "{51F9B8F5-66EA-491C-BC54-6C2B794B904D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Transfermarkt.QA.Framework", "src\Transfermarkt.QA.Framework\Transfermarkt.QA.Framework.csproj", "{0BB61815-5684-4B67-B559-3BE9D8F30DBA}"
 EndProject

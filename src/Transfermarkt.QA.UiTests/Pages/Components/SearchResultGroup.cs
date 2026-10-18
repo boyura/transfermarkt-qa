@@ -1,4 +1,4 @@
-namespace Transfermarkt.QA.Tests.Pages.Components;
+namespace Transfermarkt.QA.UiTests.Pages.Components;
 
 /// <summary>
 /// One result group on the search results page (clubs, players, agents...), found by the title in its heading,

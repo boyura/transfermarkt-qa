@@ -1,4 +1,4 @@
-namespace Transfermarkt.QA.Tests.Pages.Components;
+namespace Transfermarkt.QA.UiTests.Pages.Components;
 
 /// <summary>Header quick-search: the form with its input and the search icon button.</summary>
 public sealed class SearchComponent(IPage page)

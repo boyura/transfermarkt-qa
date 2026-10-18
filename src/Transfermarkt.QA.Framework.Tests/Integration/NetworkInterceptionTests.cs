@@ -1,7 +1,7 @@
-using Transfermarkt.QA.Tests.Config;
-using Transfermarkt.QA.Tests.Core;
+using Transfermarkt.QA.Framework.Config;
+using Transfermarkt.QA.Framework.Core;
 
-namespace Transfermarkt.QA.Tests.Integration;
+namespace Transfermarkt.QA.Framework.Tests.Integration;
 
 /// <summary>
 /// Integration level (browser + network layer): proves the HTTP error monitor behind UI test #5 actually

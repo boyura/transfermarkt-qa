@@ -1,14 +1,12 @@
 using NUnit.Framework.Interfaces;
-using Transfermarkt.QA.Tests.Config;
-using Transfermarkt.QA.Tests.Pages.Components;
+using Transfermarkt.QA.Framework.Config;
 
-namespace Transfermarkt.QA.Tests.Core;
+namespace Transfermarkt.QA.Framework.Core;
 
 /// <summary>
 /// Base for browser tests. Playwright's PageTest already gives every test a fresh,
 /// isolated BrowserContext + Page (no shared state between tests). On top of that this adds:
-/// consistent context options, timeouts, an HTTP error monitor, auto-dismissal of the cookie
-/// consent overlay, and failure diagnostics (screenshot + trace) attached to the NUnit result.
+/// consistent context options, timeouts, an HTTP error monitor, and failure diagnostics (screenshot + trace) attached to the NUnit result.
 /// </summary>
 public abstract class BaseUiTest : PageTest
 {
@@ -33,10 +31,6 @@ public abstract class BaseUiTest : PageTest
         Http = new HttpErrorMonitor(Context);
 
         await Context.Tracing.StartAsync(new() { Screenshots = true, Snapshots = true, Sources = false });
-
-        // A locator handler fires only when the overlay blocks an action, so tests need no
-        // "if banner then click" branching and no fixed sleeps.
-        await new ConsentDialog(Page).RegisterAutoDismissAsync();
     }
 
     /// <summary>

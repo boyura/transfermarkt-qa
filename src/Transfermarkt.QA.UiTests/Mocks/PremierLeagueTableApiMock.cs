@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace Transfermarkt.QA.Tests.Mocks;
+namespace Transfermarkt.QA.UiTests.Mocks;
 
 public enum Trend { None, Up, Down }
 

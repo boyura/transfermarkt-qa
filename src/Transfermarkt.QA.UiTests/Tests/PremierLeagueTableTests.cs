@@ -1,12 +1,13 @@
-using Transfermarkt.QA.Tests.Core;
-using Transfermarkt.QA.Tests.Mocks;
-using Transfermarkt.QA.Tests.Pages;
-using Transfermarkt.QA.Tests.Pages.Components;
+using Transfermarkt.QA.UiTests.Core;
+using Transfermarkt.QA.Framework.Core;
+using Transfermarkt.QA.UiTests.Mocks;
+using Transfermarkt.QA.UiTests.Pages;
+using Transfermarkt.QA.UiTests.Pages.Components;
 
-namespace Transfermarkt.QA.Tests.Ui;
+namespace Transfermarkt.QA.UiTests.Tests;
 
 [TestFixture, Category("E2E")]
-public class PremierLeagueTableTests : BaseUiTest
+public class PremierLeagueTableTests : TransfermarktUiTest
 {
     private const int ExpectedRows = 10;
 

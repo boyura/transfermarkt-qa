@@ -1,4 +1,4 @@
-namespace Transfermarkt.QA.Tests.Pages.Components;
+namespace Transfermarkt.QA.UiTests.Pages.Components;
 
 /// <summary>Login form shown by the header "Log in" button (rendered in the tm-userbox web component).</summary>
 public sealed class LoginFormComponent(IPage page)

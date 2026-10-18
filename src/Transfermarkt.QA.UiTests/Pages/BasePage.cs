@@ -1,6 +1,6 @@
-using Transfermarkt.QA.Tests.Pages.Components;
+using Transfermarkt.QA.UiTests.Pages.Components;
 
-namespace Transfermarkt.QA.Tests.Pages;
+namespace Transfermarkt.QA.UiTests.Pages;
 
 /// <summary>
 /// Page objects expose intent (what a user does / sees) and own all locators.

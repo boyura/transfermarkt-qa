@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Transfermarkt.QA.Tests.Mocks;
+namespace Transfermarkt.QA.UiTests.Mocks;
 
 // Shape of /ceapi/competitionTables/index/{id}. Only the fields tests touch are typed; everything
 // else is kept in [JsonExtensionData] so the response is sent back to the page unchanged.
