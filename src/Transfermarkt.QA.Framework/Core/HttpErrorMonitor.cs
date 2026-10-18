@@ -1,3 +1,4 @@
+using Transfermarkt.QA.Framework.Config;
 using Transfermarkt.QA.Framework.Helpers;
 
 namespace Transfermarkt.QA.Framework.Core;
@@ -10,11 +11,12 @@ public sealed class HttpErrorMonitor : IDisposable
 {
     private readonly IBrowserContext _context;
 
-    public HttpErrorLog Log { get; } = new();
+    public HttpErrorLog Log { get; }
 
     public HttpErrorMonitor(IBrowserContext context)
     {
         _context = context;
+        Log = new HttpErrorLog(TestSettings.MonitoredHosts);
         _context.Response += OnResponse;
     }
 

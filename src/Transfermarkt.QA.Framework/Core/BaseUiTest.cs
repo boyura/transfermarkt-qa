@@ -34,7 +34,7 @@ public abstract class BaseUiTest : PageTest
     }
 
     /// <summary>
-    /// Every test fails if any HTTP 500 was seen, first-party or third-party. Override to false
+    /// Every test fails if any HTTP 500 came from a host in MonitoredHosts (third-party ads/trackers are ignored). Override to false
     /// only for tests that inject a 500 on purpose.
     /// </summary>
     protected virtual bool FailOn500 => true;

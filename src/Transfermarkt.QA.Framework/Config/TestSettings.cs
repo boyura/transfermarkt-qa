@@ -13,6 +13,12 @@ public static class TestSettings
 
     public static string BaseUrl => Values["BaseUrl"].GetString()!;
 
+    /// <summary>Hosts whose HTTP 500s fail a test (exact match). Defaults to the BaseUrl host when not configured.</summary>
+    public static IReadOnlyList<string> MonitoredHosts =>
+        Values.TryGetValue("MonitoredHosts", out var hosts)
+            ? hosts.EnumerateArray().Select(h => h.GetString()!).ToArray()
+            : [new Uri(BaseUrl).Host];
+
     /// <summary>A regular desktop UA: the default "HeadlessChrome" UA is commonly blocked by bot protection.</summary>
     public static string UserAgent => Values["UserAgent"].GetString()!;
 

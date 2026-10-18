@@ -6,7 +6,7 @@ namespace Transfermarkt.QA.Framework.Tests.Unit;
 public class HttpErrorLogTests
 {
     [Test]
-    public void Record_Captures500RegardlessOfHost()
+    public void Record_WithoutBaseUrl_Captures500FromAnyHost()
     {
         var log = new HttpErrorLog();
 
@@ -17,6 +17,24 @@ public class HttpErrorLogTests
         {
             "https://www.transfermarkt.com/a",
             "https://tracker.example.com/b"
+        }));
+    }
+
+    [Test]
+    public void Record_WithMonitoredHosts_CapturesOnlyThoseHostsExactly()
+    {
+        var log = new HttpErrorLog(["www.transfermarkt.com", "tmapi.transfermarkt.technology"]);
+
+        log.Record("GET", "https://www.transfermarkt.com/a", 500);
+        log.Record("GET", "https://TMAPI.transfermarkt.technology/b", 500);
+        log.Record("GET", "https://transfermarkt.com/c", 500);
+        log.Record("GET", "https://sub.www.transfermarkt.com/d", 500);
+        log.Record("GET", "https://tracker.example.com/e", 500);
+
+        Assert.That(log.Failures.Select(f => f.Url), Is.EqualTo(new[]
+        {
+            "https://www.transfermarkt.com/a",
+            "https://TMAPI.transfermarkt.technology/b"
         }));
     }
 
